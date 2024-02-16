@@ -20,40 +20,44 @@ var allCC = new Map([
 function ccnumber( cc, num=5) {
  var
  array = allCC.get(cc),
- marks = array.slice(1),
  digit = array[0],
- numM = marks.length;
+ marks = array.slice(1),
+ nuM = marks.length;
 
- console.log('\n'+cc+':')
+ console.log('\n'+cc+' ('+digit,'digits) :')
  for (let nDIG of digit) {
   for (let n=num; n-- > 0;) {
 
-   let number = marks[ Math.floor( Math.random()*numM ) ]
+   let number = marks[ Math.floor( Math.random()*nuM ) ]
    number = String( number);
    while (number.length < (nDIG-1))    // simplest random-based number
      number += Math.floor(Math.random()*10);
 
-    var u =0, pos = nDIG-2; // get check digit: loop from # DIGIT less one to 0
+    var u =0, pos = nDIG-2; // get check digit: loop from # digit less one to 0
     while ( pos >= 0 ) {
 
-        odd = +number[ pos] *2;   // "+" ensures a real numeric 
+        odd = +number[ pos]*2;   // "+" coerces integer type expression 
         u += odd>9 ? odd-9 : odd;
         if ( pos ) u += +number[ pos-1];
         pos -= 2;
     }
-
     console.log(number += Math.ceil(u/10) *10 -u);
   }
  }
 }
 
-function getallCC( n=5) {
+function getallCC( n) {
  for (let cc of allCC.keys()) ccnumber( cc, n);
 }
-//let len = process.argv.length -2, ccLs = process.argv.slice(2);
+
+let
+ar = process.argv.slice(2), n;
+if (ar[0]) {
+ n = +ar[0];
+ if (!n) { console.log('argument must be a positive integer number'); process.exit()}
+} else n = 5;
 
 (async ()=>{
- await getallCC(); //.then( r => console.log(r));
-
+ await getallCC( n); //.then( r => console.log(r));
  process.exit()
 })()
